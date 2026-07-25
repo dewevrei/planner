@@ -181,6 +181,7 @@ select {
 
 .btn:focus-visible,
 .tab:focus-visible,
+.sort-button:focus-visible,
 .item-delete:focus-visible,
 .item-check:focus-visible {
     outline: 3px solid var(--focus-ring);
@@ -238,8 +239,16 @@ select {
     gap: var(--space-xsmall);
 }
 
-.search {
+.list-tools {
+    display: flex;
+    align-items: center;
+    gap: var(--space-compact);
     margin-bottom: var(--gap);
+}
+
+.search {
+    min-width: 0;
+    flex: 1 1 auto;
 }
 
 .search-input {
@@ -276,6 +285,29 @@ select {
     color: var(--surface);
     border-color: var(--text);
     background: var(--text);
+}
+
+.sort-controls {
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--space-xsmall);
+}
+
+.sort-button {
+    height: 42px;
+    padding: 0 var(--space-compact);
+    border: 1px solid var(--line);
+    border-radius: var(--control-radius);
+    color: var(--muted);
+    background: var(--surface);
+    cursor: pointer;
+}
+
+.sort-button.is-active {
+    color: var(--brand);
+    border-color: var(--brand);
+    background: var(--overdue-background);
+    font-weight: 700;
 }
 
 .list {
@@ -463,6 +495,25 @@ select {
 
     .summary-item {
         padding: var(--space-compact) var(--space-small);
+    }
+
+    .list-tools {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-xsmall);
+        margin-bottom: var(--space-small);
+    }
+
+    .sort-controls {
+        width: 100%;
+    }
+
+    .sort-button {
+        min-width: 0;
+        flex: 1 1 50%;
+        height: 40px;
+        padding-inline: var(--space-xsmall);
+        font-size: 14px;
     }
 
     .tabs {

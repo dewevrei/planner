@@ -61,10 +61,18 @@
                     <button class="tab" type="button" data-filter="done">완료</button>
                 </div>
             </div>
-            <div class="search" role="search">
-                <label class="sr-only" for="goal-search">학습 목표 검색</label>
-                <input class="search-input" id="goal-search" type="search"
-                    placeholder="학습 목표 검색" autocomplete="off" aria-controls="goal-list">
+            <div class="list-tools">
+                <div class="search" role="search">
+                    <label class="sr-only" for="goal-search">학습 목표 검색</label>
+                    <input class="search-input" id="goal-search" type="search"
+                        placeholder="학습 목표 검색" autocomplete="off" aria-controls="goal-list">
+                </div>
+                <div class="sort-controls" id="sort-controls" role="group" aria-label="목록 정렬">
+                    <button class="sort-button is-active" type="button"
+                        data-sort="deadline" aria-pressed="true">마감일 임박순</button>
+                    <button class="sort-button" type="button"
+                        data-sort="latest" aria-pressed="false">최신순</button>
+                </div>
             </div>
             <ul class="list" id="goal-list"></ul>
             <p class="list-empty" id="list-empty" aria-live="polite">아직 등록된 목표가 없습니다.</p>

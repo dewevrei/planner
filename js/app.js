@@ -4,6 +4,7 @@ const STORAGE_KEY = "skala-planner";
 
 let filter = "all";
 let searchQuery = "";
+let sortOrder = "deadline";
 
 let goals = loadGoals();
 
@@ -16,6 +17,7 @@ const listEl = document.getElementById("goal-list");
 const emptyEl = document.getElementById("list-empty");
 const errorEl = document.getElementById("form-error");
 const tabsEl = document.getElementById("filter-tabs");
+const sortControlsEl = document.getElementById("sort-controls");
 const fillEl = document.getElementById("progress-fill");
 const textEl = document.getElementById("progress-text");
 const summaryElements = {
@@ -121,7 +123,19 @@ function visible() {
     if(searchQuery !== "") {
         items = items.filter((g) => g.title.toLocaleLowerCase().includes(searchQuery));
     }
-    return items;
+    return [...items].sort((a, b) => {
+        if(sortOrder === "latest") {
+            return Number(b.id) - Number(a.id);
+        }
+        if(!a.dueDate && !b.dueDate) {
+            return Number(b.id) - Number(a.id);
+        }
+        if(!a.dueDate) return 1;
+        if(!b.dueDate) return -1;
+
+        const deadlineComparison = a.dueDate.localeCompare(b.dueDate);
+        return deadlineComparison || Number(b.id) - Number(a.id);
+    });
 }
 
 function getToday() {
@@ -240,6 +254,19 @@ tabsEl.addEventListener("click", (event) => {
 
 searchInput.addEventListener("input", () => {
     searchQuery = searchInput.value.trim().toLocaleLowerCase();
+    render();
+});
+
+sortControlsEl.addEventListener("click", (event) => {
+    const button = event.target.closest(".sort-button");
+    if(!button) return;
+
+    sortOrder = button.dataset.sort;
+    sortControlsEl.querySelectorAll(".sort-button").forEach((sortButton) => {
+        const isActive = sortButton === button;
+        sortButton.classList.toggle("is-active", isActive);
+        sortButton.setAttribute("aria-pressed", String(isActive));
+    });
     render();
 });
 
