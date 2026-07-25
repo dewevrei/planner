@@ -165,17 +165,19 @@ function render() {
         li.classList.toggle("is-overdue", isOverdue(goal));
         li.dataset.id = goal.id;
 
-        const label = document.createElement("label");
-        label.className = "item-main";
+        const main = document.createElement("div");
+        main.className = "item-main";
 
         const checkbox = document.createElement("input");
         checkbox.className = "item-check";
         checkbox.type = "checkbox";
         checkbox.checked = goal.done;
+        checkbox.setAttribute("aria-label", `${goal.title} 완료 상태`);
 
         const title = document.createElement("span");
         title.className = "item-text";
         title.textContent = goal.title;
+        title.title = "더블클릭하여 수정";
 
         const badge = document.createElement("span");
         badge.className = "badge";
@@ -199,8 +201,8 @@ function render() {
         deleteButton.setAttribute("aria-label", `${goal.title} 삭제`);
         deleteButton.textContent = "×";
 
-        label.append(checkbox, title);
-        li.append(label, meta, deleteButton);
+        main.append(checkbox, title);
+        li.append(main, meta, deleteButton);
         listEl.appendChild(li);
     });
     emptyEl.textContent = searchQuery === ""
@@ -240,6 +242,55 @@ listEl.addEventListener("click", (event) => {
     if(event.target.matches(".item-delete")) {
         removeGoals(id);
     }
+});
+
+listEl.addEventListener("dblclick", (event) => {
+    const title = event.target.closest(".item-text");
+    if(!title) return;
+
+    const li = title.closest(".item");
+    const goal = goals.find((g) => String(g.id) === li.dataset.id);
+
+    const editForm = document.createElement("form");
+    editForm.className = "item-edit";
+
+    const editInput = document.createElement("input");
+    editInput.className = "item-edit-input";
+    editInput.type = "text";
+    editInput.value = goal.title;
+    editInput.required = true;
+    editInput.setAttribute("aria-label", `${goal.title} 목표 제목 수정`);
+
+    const saveButton = document.createElement("button");
+    saveButton.className = "item-save";
+    saveButton.type = "submit";
+    saveButton.textContent = "저장";
+
+    editForm.append(editInput, saveButton);
+    title.replaceWith(editForm);
+    editInput.focus();
+    editInput.select();
+});
+
+listEl.addEventListener("submit", (event) => {
+    const editForm = event.target.closest(".item-edit");
+    if(!editForm) return;
+
+    event.preventDefault();
+    const editInput = editForm.querySelector(".item-edit-input");
+    const editedTitle = editInput.value.trim();
+
+    editInput.setCustomValidity(editedTitle === "" ? "학습 목표를 한 글자 이상 입력해 주세요." : "");
+    if(editedTitle === "") {
+        editInput.reportValidity();
+        return;
+    }
+
+    const id = editForm.closest(".item").dataset.id;
+    const goal = goals.find((g) => String(g.id) === id);
+    goal.title = editedTitle;
+    saveGoals();
+    render();
 });
 
 tabsEl.addEventListener("click", (event) => {

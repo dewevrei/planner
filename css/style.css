@@ -183,7 +183,8 @@ select {
 .tab:focus-visible,
 .sort-button:focus-visible,
 .item-delete:focus-visible,
-.item-check:focus-visible {
+.item-check:focus-visible,
+.item-save:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 2px;
 }
@@ -356,6 +357,45 @@ select {
     font-size: 18px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.item-edit {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    gap: var(--space-xsmall);
+}
+
+.item-edit-input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding-inline: var(--space-compact);
+    border: 1px solid var(--line);
+    border-radius: var(--control-radius);
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+}
+
+.item-edit-input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--focus-shadow);
+}
+
+.item-save {
+    height: 40px;
+    flex: 0 0 auto;
+    padding-inline: var(--space-compact);
+    border: 0;
+    border-radius: var(--control-radius);
+    color: var(--surface);
+    background: var(--brand);
+    cursor: pointer;
+}
+
+.item-save:hover {
+    background: var(--brand-dark);
 }
 
 .item.is-done .item-text {
