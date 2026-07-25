@@ -1,6 +1,9 @@
 :root {
+    color-scheme: var(--color-scheme);
+    --color-scheme: light;
     --brand: #cf2f3b;
     --brand-dark: #b82431;
+    --on-brand: #ffffff;
     --text: #303033;
     --muted: #8b8b90;
     --line: #dedee2;
@@ -19,6 +22,23 @@
     --space-large: 32px;
     --radius: 12px;
     --control-radius: 10px;
+}
+
+html[data-theme="dark"] {
+    --color-scheme: dark;
+    --brand: #ff7b86;
+    --brand-dark: #ff98a0;
+    --on-brand: #241013;
+    --text: #f5f5f7;
+    --muted: #aaaab2;
+    --line: #3b3b42;
+    --surface: #202024;
+    --background: #141416;
+    --progress-track: #34343a;
+    --focus-shadow: rgba(255, 123, 134, 0.16);
+    --focus-ring: rgba(255, 123, 134, 0.4);
+    --overdue: #ff8992;
+    --overdue-background: #321d20;
 }
 
 * {
@@ -69,6 +89,35 @@ select {
     margin: 0;
     color: var(--muted);
     font-size: 18px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-small);
+}
+
+.theme-button {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xsmall);
+    padding: 0 var(--space-compact);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--text);
+    background: var(--background);
+    cursor: pointer;
+}
+
+.theme-button:hover {
+    color: var(--brand);
+    border-color: var(--brand);
+}
+
+.theme-icon {
+    font-size: 20px;
+    line-height: 1;
 }
 
 .container {
@@ -166,7 +215,7 @@ select {
     height: 50px;
     min-width: 0;
     background: var(--brand);
-    color: var(--surface);
+    color: var(--on-brand);
     padding: 0 18px;
     border: 0;
     border-radius: var(--control-radius);
@@ -180,6 +229,7 @@ select {
 }
 
 .btn:focus-visible,
+.theme-button:focus-visible,
 .tab:focus-visible,
 .sort-button:focus-visible,
 .item-delete:focus-visible,
@@ -389,7 +439,7 @@ select {
     padding-inline: var(--space-compact);
     border: 0;
     border-radius: var(--control-radius);
-    color: var(--surface);
+    color: var(--on-brand);
     background: var(--brand);
     cursor: pointer;
 }
@@ -497,6 +547,16 @@ select {
 
     .today {
         font-size: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .theme-button {
+        height: 38px;
+        font-size: 14px;
     }
 
     .container {

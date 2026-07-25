@@ -1,6 +1,7 @@
 "use strict";
 
 const STORAGE_KEY = "skala-planner";
+const THEME_STORAGE_KEY = "skala-planner-theme";
 
 let filter = "all";
 let searchQuery = "";
@@ -18,6 +19,9 @@ const emptyEl = document.getElementById("list-empty");
 const errorEl = document.getElementById("form-error");
 const tabsEl = document.getElementById("filter-tabs");
 const sortControlsEl = document.getElementById("sort-controls");
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
+const themeLabel = document.getElementById("theme-label");
 const fillEl = document.getElementById("progress-fill");
 const textEl = document.getElementById("progress-text");
 const summaryElements = {
@@ -57,6 +61,32 @@ function saveGoals() {
         localStorage.setItem(STORAGE_KEY, data);
     } catch(error) {
         console.error("LocalStorage 저장에 실패했습니다.", error);
+    }
+}
+
+function loadTheme() {
+    try {
+        return localStorage.getItem(THEME_STORAGE_KEY) === "dark" ? "dark" : "light";
+    } catch(error) {
+        console.error("테마 설정을 읽을 수 없습니다.", error);
+        return "light";
+    }
+}
+
+function applyTheme(theme) {
+    const isDark = theme === "dark";
+    document.documentElement.dataset.theme = theme;
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+    themeToggle.setAttribute("aria-label", isDark ? "라이트 모드 켜기" : "다크 모드 켜기");
+    themeIcon.textContent = isDark ? "☀" : "☾";
+    themeLabel.textContent = isDark ? "라이트 모드" : "다크 모드";
+}
+
+function saveTheme(theme) {
+    try {
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch(error) {
+        console.error("테마 설정 저장에 실패했습니다.", error);
     }
 }
 
@@ -321,6 +351,12 @@ sortControlsEl.addEventListener("click", (event) => {
     render();
 });
 
+themeToggle.addEventListener("click", () => {
+    const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme);
+    saveTheme(nextTheme);
+});
+
 async function loadTip() {
     const tipEl = document.getElementById("tip");
 
@@ -339,5 +375,6 @@ async function loadTip() {
     }
 }
 
+applyTheme(loadTheme());
 render();
 loadTip();
