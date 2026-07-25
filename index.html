@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SKALA 스터디 플래너</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -42,8 +43,13 @@
                     <button class="tab" type="button" data-filter="done">완료</button>
                 </div>
             </div>
+            <div class="search" role="search">
+                <label class="sr-only" for="goal-search">학습 목표 검색</label>
+                <input class="search-input" id="goal-search" type="search"
+                    placeholder="학습 목표 검색" autocomplete="off" aria-controls="goal-list">
+            </div>
             <ul class="list" id="goal-list"></ul>
-            <p class="list-empty" id="list-empty">아직 등록된 목표가 없습니다.</p>
+            <p class="list-empty" id="list-empty" aria-live="polite">아직 등록된 목표가 없습니다.</p>
             <div class="progress">
                 <div class="progress-bar">
                     <span class="progress-fill" id="progress-fill"></span>

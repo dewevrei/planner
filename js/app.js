@@ -3,6 +3,7 @@
 const STORAGE_KEY = "skala-planner";
 
 let filter = "all";
+let searchQuery = "";
 
 let goals = loadGoals();
 
@@ -10,6 +11,7 @@ const form = document.getElementById("goal-form");
 const input = document.getElementById("goal-input");
 const category = document.getElementById("goal-category");
 const dueDate = document.getElementById("goal-due-date");
+const searchInput = document.getElementById("goal-search");
 const listEl = document.getElementById("goal-list");
 const emptyEl = document.getElementById("list-empty");
 const errorEl = document.getElementById("form-error");
@@ -95,9 +97,13 @@ function updateProgress() {
 }
 
 function visible() {
-    if(filter === "active") return goals.filter((g) => !g.done);
-    if(filter === "done") return goals.filter((g) => g.done);
-    return goals;
+    let items = goals;
+    if(filter === "active") items = items.filter((g) => !g.done);
+    if(filter === "done") items = items.filter((g) => g.done);
+    if(searchQuery !== "") {
+        items = items.filter((g) => g.title.toLocaleLowerCase().includes(searchQuery));
+    }
+    return items;
 }
 
 function getToday() {
@@ -165,6 +171,9 @@ function render() {
         li.append(label, meta, deleteButton);
         listEl.appendChild(li);
     });
+    emptyEl.textContent = searchQuery === ""
+        ? "아직 등록된 목표가 없습니다."
+        : "검색 결과가 없습니다.";
     emptyEl.hidden = items.length > 0;
     updateProgress();
 }
@@ -207,6 +216,11 @@ tabsEl.addEventListener("click", (event) => {
     document.querySelectorAll(".tab").forEach((t) => {
         t.classList.toggle("is-active", t === tab);
     });
+    render();
+});
+
+searchInput.addEventListener("input", () => {
+    searchQuery = searchInput.value.trim().toLocaleLowerCase();
     render();
 });
 
