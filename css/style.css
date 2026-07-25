@@ -14,6 +14,12 @@
     --focus-ring: rgba(207, 47, 59, 0.25);
     --overdue: #a4212c;
     --overdue-background: #fff2f3;
+    --priority-high: #a4212c;
+    --priority-high-background: #fff2f3;
+    --priority-medium: #875a00;
+    --priority-medium-background: #fff7dc;
+    --priority-low: #397052;
+    --priority-low-background: #edf8f1;
     --space-xsmall: 8px;
     --space-compact: 12px;
     --space-small: 16px;
@@ -39,6 +45,12 @@ html[data-theme="dark"] {
     --focus-ring: rgba(255, 123, 134, 0.4);
     --overdue: #ff8992;
     --overdue-background: #321d20;
+    --priority-high: #ff8992;
+    --priority-high-background: #321d20;
+    --priority-medium: #f4c865;
+    --priority-medium-background: #332b18;
+    --priority-low: #8bd3a8;
+    --priority-low-background: #1d3025;
 }
 
 * {
@@ -197,6 +209,10 @@ select {
 
 .form-select {
     flex: 0 0 162px;
+}
+
+.form-priority {
+    flex-basis: 132px;
 }
 
 .form-date {
@@ -526,6 +542,30 @@ select {
     line-height: 1.25;
 }
 
+.priority-badge {
+    flex: 0 0 auto;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.priority-high {
+    color: var(--priority-high);
+    background: var(--priority-high-background);
+}
+
+.priority-medium {
+    color: var(--priority-medium);
+    background: var(--priority-medium-background);
+}
+
+.priority-low {
+    color: var(--priority-low);
+    background: var(--priority-low-background);
+}
+
 .tip {
     margin: 0;
     font-size: 20px;
@@ -588,6 +628,12 @@ select {
         gap: var(--space-xsmall);
     }
 
+    .form-category,
+    .form-priority {
+        flex: 1 1 calc(50% - 4px);
+        width: calc(50% - 4px);
+    }
+
     .summary-list {
         grid-template-columns: 1fr;
         gap: var(--space-xsmall);
@@ -610,10 +656,10 @@ select {
 
     .sort-button {
         min-width: 0;
-        flex: 1 1 50%;
+        flex: 1 1 0;
         height: 40px;
-        padding-inline: var(--space-xsmall);
-        font-size: 14px;
+        padding-inline: 4px;
+        font-size: 13px;
     }
 
     .tabs {
@@ -673,6 +719,11 @@ select {
 
     .badge {
         padding: 5px 7px;
+    }
+
+    .priority-badge {
+        padding: 4px 7px;
+        font-size: 13px;
     }
 
     .item-delete {

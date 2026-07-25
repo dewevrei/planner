@@ -2,6 +2,11 @@
 
 const STORAGE_KEY = "skala-planner";
 const THEME_STORAGE_KEY = "skala-planner-theme";
+const PRIORITIES = {
+    high: { label: "높음", order: 0 },
+    medium: { label: "보통", order: 1 },
+    low: { label: "낮음", order: 2 }
+};
 
 let filter = "all";
 let searchQuery = "";
@@ -12,6 +17,7 @@ let goals = loadGoals();
 const form = document.getElementById("goal-form");
 const input = document.getElementById("goal-input");
 const category = document.getElementById("goal-category");
+const priority = document.getElementById("goal-priority");
 const dueDate = document.getElementById("goal-due-date");
 const searchInput = document.getElementById("goal-search");
 const listEl = document.getElementById("goal-list");
@@ -46,7 +52,10 @@ function loadGoals() {
             return [];
         }
 
-        return parsed;
+        return parsed.map((goal) => ({
+            ...goal,
+            priority: Object.hasOwn(PRIORITIES, goal.priority) ? goal.priority : "medium"
+        }));
     } catch(error) {
         console.error("LocalStorage에서 데이터를 읽을 수 없습니다.", error);
         return [];
@@ -105,18 +114,19 @@ function createId() {
 goals.push({id: Date.now(), title: title, category: category.value, done: false});
 */
 
-function createGoal(title, category, deadline) {
+function createGoal(title, category, priorityValue, deadline) {
     return {
         id: createId(),
         title: title,
         category: category,
+        priority: priorityValue,
         dueDate: deadline,
         done: false
     };
 }
 
-function addGoal(title, category, deadline) {
-    const goal = createGoal(title, category, deadline);
+function addGoal(title, category, priorityValue, deadline) {
+    const goal = createGoal(title, category, priorityValue, deadline);
     goals.push(goal);
 
     saveGoals();
@@ -154,6 +164,10 @@ function visible() {
         items = items.filter((g) => g.title.toLocaleLowerCase().includes(searchQuery));
     }
     return [...items].sort((a, b) => {
+        if(sortOrder === "priority") {
+            const priorityComparison = PRIORITIES[a.priority].order - PRIORITIES[b.priority].order;
+            if(priorityComparison !== 0) return priorityComparison;
+        }
         if(sortOrder === "latest") {
             return Number(b.id) - Number(a.id);
         }
@@ -213,9 +227,14 @@ function render() {
         badge.className = "badge";
         badge.textContent = goal.category;
 
+        const priorityBadge = document.createElement("span");
+        priorityBadge.className = `priority-badge priority-${goal.priority}`;
+        priorityBadge.textContent = PRIORITIES[goal.priority].label;
+        priorityBadge.setAttribute("aria-label", `우선순위 ${PRIORITIES[goal.priority].label}`);
+
         const meta = document.createElement("div");
         meta.className = "item-meta";
-        meta.appendChild(badge);
+        meta.append(badge, priorityBadge);
 
         if(goal.dueDate) {
             const deadline = document.createElement("time");
@@ -247,6 +266,7 @@ form.addEventListener("submit", (event) => {
     event.preventDefault();
     const title = input.value.trim();
     const cat = category.value.trim();
+    const priorityValue = priority.value;
     const deadline = dueDate.value;
     if(title === "") {
         errorEl.hidden = false;
@@ -254,8 +274,9 @@ form.addEventListener("submit", (event) => {
         return;
     }
     errorEl.hidden = true;
-    addGoal(title, cat, deadline);
+    addGoal(title, cat, priorityValue, deadline);
     input.value="";
+    priority.value="medium";
     dueDate.value="";
 });
 

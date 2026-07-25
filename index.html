@@ -27,10 +27,16 @@
                 <input class="form-input" id="goal-input" type="text"
                 placeholder="오늘 공부할 내용을 입력하세요" required>
                 <label class="sr-only" for="goal-category">분류</label>
-                <select class="form-select" id="goal-category">
+                <select class="form-select form-category" id="goal-category">
                     <option value="HTML">HTML</option>
                     <option value="CSS">CSS</option>
                     <option value="JS">JS</option>
+                </select>
+                <label class="sr-only" for="goal-priority">우선순위</label>
+                <select class="form-select form-priority" id="goal-priority">
+                    <option value="high">높음</option>
+                    <option value="medium" selected>보통</option>
+                    <option value="low">낮음</option>
                 </select>
                 <label class="sr-only" for="goal-due-date">마감일</label>
                 <input class="form-date" id="goal-due-date" type="date">
@@ -77,6 +83,8 @@
                 <div class="sort-controls" id="sort-controls" role="group" aria-label="목록 정렬">
                     <button class="sort-button is-active" type="button"
                         data-sort="deadline" aria-pressed="true">마감일 임박순</button>
+                    <button class="sort-button" type="button"
+                        data-sort="priority" aria-pressed="false">우선순위순</button>
                     <button class="sort-button" type="button"
                         data-sort="latest" aria-pressed="false">최신순</button>
                 </div>
