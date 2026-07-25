@@ -18,6 +18,11 @@ const errorEl = document.getElementById("form-error");
 const tabsEl = document.getElementById("filter-tabs");
 const fillEl = document.getElementById("progress-fill");
 const textEl = document.getElementById("progress-text");
+const summaryElements = {
+    HTML: document.getElementById("summary-html"),
+    CSS: document.getElementById("summary-css"),
+    JS: document.getElementById("summary-js")
+};
 
 /* 
     LocalStorage에서 Goals를 로드하는 함수
@@ -94,6 +99,19 @@ function updateProgress() {
 
     fillEl.style.width = percent + "%";
     textEl.textContent = `전체 ${total}개 중 ${done}개 완료 (${percent}%)`;
+}
+
+function updateCategorySummary() {
+    const remainingCounts = goals.reduce((counts, goal) => {
+        if(!goal.done && Object.hasOwn(counts, goal.category)) {
+            counts[goal.category] += 1;
+        }
+        return counts;
+    }, { HTML: 0, CSS: 0, JS: 0 });
+
+    Object.entries(remainingCounts).forEach(([categoryName, count]) => {
+        summaryElements[categoryName].textContent = `${count}개`;
+    });
 }
 
 function visible() {
@@ -176,6 +194,7 @@ function render() {
         : "검색 결과가 없습니다.";
     emptyEl.hidden = items.length > 0;
     updateProgress();
+    updateCategorySummary();
 }
 
 form.addEventListener("submit", (event) => {

@@ -198,6 +198,37 @@ select {
     clip-path: inset(50%);
 }
 
+.summary-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+}
+
+.summary-item {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: var(--space-small);
+    border: 1px solid var(--line);
+    border-radius: var(--control-radius);
+    background: var(--background);
+}
+
+.summary-category {
+    color: var(--muted);
+    font-size: 16px;
+}
+
+.summary-count {
+    color: var(--brand);
+    font-size: 22px;
+}
+
 .tabs {
     display: flex;
     flex: 0 0 auto;
@@ -420,6 +451,15 @@ select {
     .form {
         flex-wrap: wrap;
         gap: 8px;
+    }
+
+    .summary-list {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .summary-item {
+        padding: 12px var(--space-small);
     }
 
     .tabs {
