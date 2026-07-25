@@ -9,6 +9,7 @@ let goals = loadGoals();
 const form = document.getElementById("goal-form");
 const input = document.getElementById("goal-input");
 const category = document.getElementById("goal-category");
+const dueDate = document.getElementById("goal-due-date");
 const listEl = document.getElementById("goal-list");
 const emptyEl = document.getElementById("list-empty");
 const errorEl = document.getElementById("form-error");
@@ -65,12 +66,18 @@ function createId() {
 goals.push({id: Date.now(), title: title, category: category.value, done: false});
 */
 
-function createGoal(title, category) {
-    return {id: createId(), title: title, category: category, done: false};
+function createGoal(title, category, deadline) {
+    return {
+        id: createId(),
+        title: title,
+        category: category,
+        dueDate: deadline,
+        done: false
+    };
 }
 
-function addGoal(title, category) {
-    const goal = createGoal(title, category);
+function addGoal(title, category, deadline) {
+    const goal = createGoal(title, category, deadline);
     goals.push(goal);
 
     saveGoals();
@@ -93,12 +100,31 @@ function visible() {
     return goals;
 }
 
+function getToday() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+function isOverdue(goal) {
+    return !goal.done && Boolean(goal.dueDate) && goal.dueDate < getToday();
+}
+
+function formatDueDate(deadline) {
+    const [year, month, day] = deadline.split("-");
+    return `마감 ${year}.${Number(month)}.${Number(day)}`;
+}
+
 function render() {
     const items = visible();
     listEl.replaceChildren();
     items.forEach((goal) => {
         const li = document.createElement("li");
-        li.className = goal.done ? "item is-done" : "item";
+        li.className = "item";
+        li.classList.toggle("is-done", goal.done);
+        li.classList.toggle("is-overdue", isOverdue(goal));
         li.dataset.id = goal.id;
 
         const label = document.createElement("label");
@@ -117,6 +143,18 @@ function render() {
         badge.className = "badge";
         badge.textContent = goal.category;
 
+        const meta = document.createElement("div");
+        meta.className = "item-meta";
+        meta.appendChild(badge);
+
+        if(goal.dueDate) {
+            const deadline = document.createElement("time");
+            deadline.className = "item-due";
+            deadline.dateTime = goal.dueDate;
+            deadline.textContent = formatDueDate(goal.dueDate);
+            meta.appendChild(deadline);
+        }
+
         const deleteButton = document.createElement("button");
         deleteButton.className = "item-delete";
         deleteButton.type = "button";
@@ -124,7 +162,7 @@ function render() {
         deleteButton.textContent = "×";
 
         label.append(checkbox, title);
-        li.append(label, badge, deleteButton);
+        li.append(label, meta, deleteButton);
         listEl.appendChild(li);
     });
     emptyEl.hidden = items.length > 0;
@@ -135,15 +173,16 @@ form.addEventListener("submit", (event) => {
     event.preventDefault();
     const title = input.value.trim();
     const cat = category.value.trim();
+    const deadline = dueDate.value;
     if(title === "") {
         errorEl.hidden = false;
         input.focus();
         return;
     }
     errorEl.hidden = true;
-    addGoal(title, cat);
+    addGoal(title, cat, deadline);
     input.value="";
-    render();
+    dueDate.value="";
 });
 
 listEl.addEventListener("click", (event) => {

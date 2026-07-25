@@ -9,6 +9,8 @@
     --progress-track: #f0f0f2;
     --focus-shadow: rgba(207, 47, 59, 0.12);
     --focus-ring: rgba(207, 47, 59, 0.25);
+    --overdue: #a4212c;
+    --overdue-background: #fff2f3;
     --gap: 20px;
     --space: 26px;
     --space-small: 16px;
@@ -121,7 +123,8 @@ select {
 }
 
 .form-input,
-.form-select {
+.form-select,
+.form-date {
     height: 50px;
     min-width: 0;
     padding-inline: 16px;
@@ -144,8 +147,13 @@ select {
     flex: 0 0 162px;
 }
 
+.form-date {
+    flex: 0 0 160px;
+}
+
 .form-input:focus,
-.form-select:focus {
+.form-select:focus,
+.form-date:focus {
     border-color: var(--brand);
     box-shadow: 0 0 0 3px var(--focus-shadow);
 }
@@ -265,6 +273,29 @@ select {
     text-decoration: line-through;
 }
 
+.item.is-overdue {
+    border-left: 4px solid var(--overdue);
+    background: var(--overdue-background);
+}
+
+.item-meta {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.item-due {
+    color: var(--muted);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.item.is-overdue .item-due {
+    color: var(--overdue);
+    font-weight: 700;
+}
+
 .progress {
     margin-top: 20px;
 }
@@ -345,6 +376,7 @@ select {
 
     .form-input,
     .form-select,
+    .form-date,
     .btn {
         flex: 1 1 100%;
         width: 100%;
@@ -389,12 +421,24 @@ select {
 
     .item {
         min-height: 52px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
         gap: 6px;
-        padding-inline: 8px 2px;
+        padding: 10px 2px 10px 8px;
+    }
+
+    .item.is-overdue {
+        padding-left: 8px;
     }
 
     .item-main {
+        grid-column: 1;
         gap: 12px;
+    }
+
+    .item-meta {
+        grid-column: 1;
+        padding-left: 32px;
     }
 
     .item-check {
@@ -413,6 +457,8 @@ select {
     }
 
     .item-delete {
+        grid-column: 2;
+        grid-row: 1 / span 2;
         width: 28px;
         font-size: 20px;
     }
